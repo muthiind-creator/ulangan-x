@@ -514,6 +514,7 @@
         let isQuizActive = false;
         let isCheated = false;
         let violationCount = 0;
+        let isReloading = false; // Penanda halaman sedang direload
 
         const matchingOptions51 = [
             { code: "A", text: "$(2x-3)(2x+3)=0$" },
@@ -679,7 +680,7 @@
 
         // --- SISTEM ANTI-CHEAT ---
         function triggerCheatLock() {
-            if (!isQuizActive) return;
+            if (!isQuizActive || isReloading) return;
             
             violationCount++;
             isCheated = true;
@@ -719,14 +720,19 @@
             }, 3000);
         }
 
+        // Penanda bahwa browser sedang direload agar tidak dihitung sebagai kecurangan
+        window.addEventListener('beforeunload', () => {
+            isReloading = true;
+        });
+
         document.addEventListener('visibilitychange', () => {
-            if (document.hidden && isQuizActive && !isCheated) {
+            if (document.hidden && isQuizActive && !isCheated && !isReloading) {
                 triggerCheatLock();
             }
         });
 
         window.addEventListener('blur', () => {
-            if (isQuizActive && !isCheated) {
+            if (isQuizActive && !isCheated && !isReloading) {
                 triggerCheatLock();
             }
         });
