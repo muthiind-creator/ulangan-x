@@ -1,0 +1,1485 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ulangan Matematika - Persamaan Kuadrat (10 Soal Acak)</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    
+    <!-- MathJax for rendering LaTeX -->
+    <script>
+        window.MathJax = {
+            tex: {
+                inlineMath: [['$', '$'], ['\\(', '\\)']],
+                displayMath: [['$$', '$$'], ['\\[', '\\]']]
+            },
+            svg: { fontCache: 'global' },
+            options: { enableMenu: false }
+        };
+    </script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+        
+        body {
+            font-family: 'Inter', sans-serif;
+            -webkit-user-select: none; 
+            -moz-user-select: none;    
+            -ms-user-select: none;     
+            user-select: none;        
+            -webkit-touch-callout: none; 
+        }
+
+        input, select, textarea {
+            -webkit-user-select: text !important;
+            -moz-user-select: text !important;
+            -ms-user-select: text !important;
+            user-select: text !important;
+            -webkit-touch-callout: default !important;
+        }
+
+        .custom-scrollbar::-webkit-scrollbar { width: 6px; }
+        .custom-scrollbar::-webkit-scrollbar-track { background: #f1f1f1; }
+        .custom-scrollbar::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
+        .custom-scrollbar::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
+    </style>
+</head>
+<body class="bg-slate-50 min-h-screen text-slate-800 flex flex-col" oncontextmenu="return false;" oncopy="return false;" oncut="return false;">
+
+    <!-- Header / Navbar -->
+    <header class="bg-indigo-700 text-white shadow-md sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-4 py-3 flex justify-between items-center">
+            <div class="flex items-center space-x-3">
+                <i class="fas fa-square-root-variable text-2xl text-amber-400"></i>
+                <div>
+                    <h1 class="font-bold text-lg leading-tight">Ulangan Harian Matematika</h1>
+                    <p class="text-xs text-indigo-200">Materi: Persamaan Kuadrat (10 Soal Acak - 70 Menit)</p>
+                </div>
+            </div>
+            <div class="flex items-center space-x-3">
+                <div id="headerTimer" class="hidden items-center bg-indigo-800 px-3 py-1.5 rounded-lg border border-indigo-600">
+                    <i class="far fa-clock text-amber-400 mr-2"></i>
+                    <span id="timerDisplay" class="font-mono font-bold text-sm">70:00</span>
+                </div>
+                <button type="button" onclick="openTeacherLoginModal()" id="btnTeacherNav" class="bg-amber-500 hover:bg-amber-600 text-slate-950 font-bold px-3 py-1.5 rounded-lg text-xs transition flex items-center space-x-1.5 shadow-sm">
+                    <i class="fas fa-user-shield"></i>
+                    <span>Akses Guru</span>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Container -->
+    <main class="max-w-7xl mx-auto px-4 py-6 flex-grow w-full">
+
+        <!-- Notifikasi Banner Buka Akses -->
+        <div id="unlockToast" class="hidden fixed top-20 left-1/2 -translate-x-1/2 z-[110] bg-emerald-600 text-white px-5 py-3 rounded-xl shadow-2xl flex items-center space-x-3 border border-emerald-400 animate-bounce">
+            <i class="fas fa-check-circle text-xl"></i>
+            <span class="text-xs font-bold">Akses ulangan berhasil dibuka oleh Guru! Silakan lanjutkan pengerjaan.</span>
+        </div>
+
+        <!-- 1. Form Identitas Siswa -->
+        <div id="identitasSection" class="max-w-md mx-auto bg-white rounded-2xl shadow-sm border border-slate-200 p-6 md:p-8">
+            <div class="mb-5 rounded-xl overflow-hidden shadow-sm border border-slate-200 bg-black">
+                <video id="introVideo" controls playsinline class="w-full h-auto rounded-xl">
+                    <source src="video.mp4" type="video/mp4">
+                    Browser Anda tidak mendukung pemutar video.
+                </video>
+            </div>
+
+            <div class="text-center mb-6">
+                <div class="w-12 h-12 bg-indigo-100 text-indigo-600 rounded-full flex items-center justify-center mx-auto mb-2 text-xl">
+                    <i class="fas fa-user-graduate"></i>
+                </div>
+                <h2 class="text-xl font-bold text-slate-800">Identitas Peserta Ulangan</h2>
+                <p class="text-xs text-slate-500 mt-1">Silakan tonton video penjelasannya terlebih dahulu, lalu isi data diri Anda untuk memulai.</p>
+            </div>
+
+            <div id="blockedAlert" class="hidden mb-6 p-4 bg-rose-50 border border-rose-200 rounded-xl text-rose-700 text-sm">
+                <div class="flex items-start">
+                    <i class="fas fa-exclamation-triangle text-lg mr-3 mt-0.5"></i>
+                    <div>
+                        <strong class="font-semibold block mb-1">Akses Ditolak / Sudah Mengerjakan</strong>
+                        <span id="blockedMessage">Siswa dengan Kelas dan Nomor Absen ini tercatat telah menyelesaikan ulangan.</span>
+                        <div class="mt-3">
+                            <button type="button" onclick="openTokenModal()" class="text-xs font-semibold bg-rose-600 hover:bg-rose-700 text-white px-3 py-1.5 rounded-md transition shadow-sm inline-flex items-center space-x-1">
+                                <i class="fas fa-key text-[10px]"></i>
+                                <span>Buka Akses Ulang (Khusus Guru)</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="checkingLoader" class="hidden mb-4 p-3 bg-indigo-50 border border-indigo-200 text-indigo-700 rounded-xl text-xs flex items-center justify-center space-x-2">
+                <i class="fas fa-spinner fa-spin"></i>
+                <span>Memeriksa status pengerjaan...</span>
+            </div>
+
+            <form id="startForm" onsubmit="event.preventDefault(); validateAndShowRules();" class="space-y-4">
+                <div>
+                    <label class="block text-xs font-semibold text-slate-700 uppercase mb-1">Nama Lengkap</label>
+                    <input type="text" id="namaSiswa" required placeholder="Masukkan nama sesuai presensi" class="w-full px-4 py-2.5 rounded-lg border border-slate-300 focus:ring-2 focus:ring-indigo-500 text-sm outline-none">
+                </div>
+
+                <div class="grid grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-700 uppercase mb-1">Kelas</label>
+                        <select id="kelasSiswa" required class="w-full px-4 py-2.5 rounded-lg border border-slate-300 focus:ring-2 focus:ring-indigo-500 text-sm bg-white">
+                            <option value="" disabled selected>Pilih Kelas</option>
+                            <option value="X. E1">X. E1</option>
+                            <option value="X. E2">X. E2</option>
+                            <option value="X. E3">X. E3</option>
+                            <option value="X. E4">X. E4</option>
+                            <option value="X. E5">X. E5</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-700 uppercase mb-1">Nomor Absen</label>
+                        <select id="absenSiswa" required class="w-full px-4 py-2.5 rounded-lg border border-slate-300 focus:ring-2 focus:ring-indigo-500 text-sm bg-white">
+                            <option value="" disabled selected>Pilih Absen</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div>
+                    <label class="block text-xs font-semibold text-slate-700 uppercase mb-1">Token Pengerjaan</label>
+                    <input type="password" id="tokenSiswa" required placeholder="Masukkan token pengerjaan" class="w-full px-4 py-2.5 rounded-lg border border-slate-300 focus:ring-2 focus:ring-indigo-500 text-sm outline-none">
+                </div>
+
+                <input type="hidden" id="scriptUrl" value="https://script.google.com/macros/s/AKfycbwvqdcMBcJcGK5L328m2CdYsKyAnBl1Of4VX_p5_SE5oMyqHYH2pmSGx7rqAsiyY2wQ/exec">
+
+                <button type="submit" id="btnNextRules" class="w-full mt-2 bg-indigo-600 hover:bg-indigo-700 text-white font-medium py-3 rounded-lg shadow-sm transition flex items-center justify-center space-x-2">
+                    <span>Lanjutkan ke Tata Tertib</span>
+                    <i class="fas fa-arrow-right text-sm"></i>
+                </button>
+            </form>
+        </div>
+
+        <!-- 1.B Halaman Kedua: Tata Tertib -->
+        <div id="rulesSection" class="hidden max-w-lg mx-auto bg-white rounded-2xl shadow-sm border border-slate-200 p-6 md:p-8">
+            <div class="text-center mb-5">
+                <div class="w-12 h-12 bg-indigo-100 text-indigo-600 rounded-full flex items-center justify-center mx-auto mb-2 text-xl">
+                    <i class="fas fa-clipboard-list"></i>
+                </div>
+                <h2 class="text-xl font-bold text-slate-800">Tata Tertib & Petunjuk Penggunaan</h2>
+                <p class="text-xs text-slate-500 mt-1">Harap baca ketentuan berikut dengan cermat sebelum memulai ulangan.</p>
+            </div>
+
+            <div class="bg-slate-50 border border-slate-200 rounded-xl p-4 text-xs text-slate-600 max-h-60 overflow-y-auto custom-scrollbar space-y-3 leading-relaxed mb-5">
+                <div>
+                    <strong class="text-slate-800 block mb-1">A. KETENTUAN UMUM PESERTA</strong>
+                    <ul class="list-disc pl-4 space-y-1">
+                        <li><strong>Identitas:</strong> Pastikan nama, kelas, dan nomor absen yang Anda masukkan sudah sesuai.</li>
+                        <li><strong>Waktu Pengerjaan:</strong> Durasi waktu ulangan adalah 70 menit dan berjalan mundur secara otomatis.</li>
+                    </ul>
+                </div>
+                <div>
+                    <strong class="text-slate-800 block mb-1">B. SISTEM ANTI-KECURANGAN (PENTING)</strong>
+                    <ul class="list-disc pl-4 space-y-1 text-rose-600">
+                        <li>Dilarang membuka tab lain, meminimize browser, atau berpindah aplikasi selama ujian berlangsung.</li>
+                        <li>Sistem akan mendeteksi otomatis tindakan berpindah tab/aplikasi dan akan <strong>MENGUNCI</strong> soal ujian.</li>
+                        <li>Jumlah pelanggaran akan terekam secara otomatis ke sistem spreadsheet guru.</li>
+                        <li>Ujian hanya dapat dibuka kembali dengan memasukkan <strong>TOKEN PERIZINAN GURU</strong>.</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="mb-5 flex items-start space-x-2.5 bg-indigo-50/50 p-3.5 rounded-xl border border-indigo-100">
+                <input type="checkbox" id="agreeCheckbox" onchange="toggleStartQuizButton()" class="mt-0.5 w-4 h-4 rounded text-indigo-600 focus:ring-indigo-500 border-slate-300 cursor-pointer">
+                <label for="agreeCheckbox" class="text-xs text-slate-700 font-medium cursor-pointer select-none">
+                    Saya telah membaca, memahami, dan berjanji akan mematuhi seluruh tata tertib serta petunjuk penggunaan di atas.
+                </label>
+            </div>
+
+            <div class="flex space-x-3">
+                <button type="button" onclick="backToIdentitas()" class="w-1/3 bg-slate-200 hover:bg-slate-300 text-slate-700 font-semibold py-3 rounded-lg text-xs transition">
+                    <i class="fas fa-arrow-left mr-1"></i> Kembali
+                </button>
+                <button type="button" id="btnStartQuiz" disabled onclick="startQuiz()" class="w-2/3 bg-indigo-600 text-white font-medium py-3 rounded-lg shadow-sm transition flex items-center justify-center space-x-2 opacity-50 cursor-not-allowed text-xs">
+                    <span>Mulai Pengerjaan (10 Soal)</span>
+                    <i class="fas fa-arrow-right text-sm"></i>
+                </button>
+            </div>
+        </div>
+
+        <!-- 2. Halaman Pengerjaan Kuis -->
+        <div id="quizSection" class="hidden grid grid-cols-1 lg:grid-cols-4 gap-6">
+            <div class="lg:col-span-3 space-y-6">
+                <div class="bg-white rounded-xl shadow-sm border border-slate-200 p-6">
+                    <div class="flex justify-between items-center border-b border-slate-100 pb-4 mb-4">
+                        <span id="questionNumBadge" class="text-xs font-bold text-indigo-600 uppercase tracking-wider bg-indigo-50 px-3 py-1 rounded-full">Soal Ke-<span id="currentQuestionNum">1</span></span>
+                        <div class="text-xs text-slate-500">
+                            Terjawab: <span id="answeredCount" class="font-bold text-slate-700">0</span> / <span>10 Soal</span>
+                        </div>
+                    </div>
+
+                    <div id="questionText" class="text-base md:text-lg font-medium text-slate-800 mb-6 leading-relaxed"></div>
+
+                    <div id="optionsContainer" class="space-y-6"></div>
+
+                    <div class="flex justify-between items-center mt-6 pt-4 border-t border-slate-100">
+                        <button id="prevBtn" type="button" onclick="navigateQuestion(-1)" class="px-4 py-2 border border-slate-300 text-slate-600 rounded-lg hover:bg-slate-50 text-sm font-medium flex items-center space-x-2 transition disabled:opacity-50">
+                            <i class="fas fa-chevron-left text-xs"></i>
+                            <span>Sebelumnya</span>
+                        </button>
+                        
+                        <button id="nextBtn" type="button" onclick="navigateQuestion(1)" class="px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 text-sm font-medium flex items-center space-x-2 transition">
+                            <span>Berikutnya</span>
+                            <i class="fas fa-chevron-right text-xs"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Navigasi Panel Soal -->
+            <div class="lg:col-span-1">
+                <div class="bg-white rounded-xl shadow-sm border border-slate-200 p-5 sticky top-20">
+                    <h3 class="font-semibold text-sm text-slate-700 mb-3 border-b pb-2">Navigasi 10 Soal</h3>
+                    <div id="questionGrid" class="grid grid-cols-5 gap-2 max-h-[380px] overflow-y-auto custom-scrollbar p-1"></div>
+                    
+                    <div class="mt-6 pt-4 border-t border-slate-100 space-y-3">
+                        <div class="flex items-center space-x-2 text-xs text-slate-600">
+                            <span class="w-3 h-3 rounded-full bg-indigo-600 inline-block"></span>
+                            <span>Sedang Dikerjakan</span>
+                        </div>
+                        <div class="flex items-center space-x-2 text-xs text-slate-600">
+                            <span class="w-3 h-3 rounded-full bg-emerald-500 inline-block"></span>
+                            <span>Sudah Dijawab</span>
+                        </div>
+                        <div class="flex items-center space-x-2 text-xs text-slate-600">
+                            <span class="w-3 h-3 rounded-full bg-slate-100 border border-slate-300 inline-block"></span>
+                            <span>Belum Dijawab</span>
+                        </div>
+
+                        <button type="button" onclick="confirmSubmission()" class="w-full mt-4 bg-emerald-600 hover:bg-emerald-700 text-white font-medium py-2.5 rounded-lg text-sm shadow-sm transition flex items-center justify-center space-x-2">
+                            <i class="fas fa-paper-plane text-xs"></i>
+                            <span>Selesai & Kirim Jawaban</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 3. Halaman Hasil -->
+        <div id="resultSection" class="hidden max-w-xl mx-auto space-y-6">
+            <div class="bg-white rounded-2xl shadow-sm border border-slate-200 p-6 md:p-8 text-center">
+                <div id="resIconContainer" class="w-20 h-20 bg-emerald-100 text-emerald-600 rounded-full flex items-center justify-center mx-auto mb-4 text-3xl">
+                    <i class="fas fa-check-circle"></i>
+                </div>
+                <h2 id="resTitle" class="text-2xl font-bold text-slate-800">Ulangan Selesai!</h2>
+                <p id="resSubtitle" class="text-sm text-slate-500 mt-1">Jawaban Anda telah tersimpan secara otomatis ke Google Sheets guru.</p>
+
+                <div class="mt-6 grid grid-cols-2 gap-4">
+                    <div class="bg-slate-50 p-4 rounded-xl border border-slate-200 text-left">
+                        <span class="block text-xs text-slate-500 uppercase font-semibold">Nama Siswa</span>
+                        <span id="resNama" class="font-bold text-slate-800 text-sm truncate block mt-1">-</span>
+                    </div>
+                    <div class="bg-slate-50 p-4 rounded-xl border border-slate-200 text-left">
+                        <span class="block text-xs text-slate-500 uppercase font-semibold">Kelas / Absen</span>
+                        <span id="resKelasAbsen" class="font-bold text-slate-800 text-sm block mt-1">-</span>
+                    </div>
+                    <div class="bg-slate-50 p-4 rounded-xl border border-slate-200 text-left">
+                        <span class="block text-xs text-slate-500 uppercase font-semibold">Benar / Total Soal</span>
+                        <span id="resSkor" class="font-bold text-indigo-600 text-base block mt-1">0 / 10</span>
+                    </div>
+                    <div class="bg-slate-50 p-4 rounded-xl border border-slate-200 text-left">
+                        <span class="block text-xs text-slate-500 uppercase font-semibold">Nilai Akhir</span>
+                        <span id="resNilai" class="font-bold text-emerald-600 text-xl block mt-1">0</span>
+                    </div>
+                </div>
+
+                <div class="mt-4 bg-rose-50 p-3 rounded-xl border border-rose-200 text-xs text-rose-700 flex justify-between items-center">
+                    <span class="font-semibold uppercase">Total Pelanggaran Deteksi:</span>
+                    <span id="resPelanggaran" class="font-bold text-sm bg-rose-600 text-white px-2.5 py-0.5 rounded-full">0 kali</span>
+                </div>
+
+                <div id="submissionStatus" class="mt-6 p-4 bg-emerald-50 rounded-xl text-xs font-semibold text-emerald-700 flex flex-col items-center justify-center space-y-2 border border-emerald-200">
+                    <div class="flex items-center space-x-2">
+                        <i id="statusIcon" class="fas fa-cloud-upload-alt text-base"></i>
+                        <span id="statusText">Status: Data Jawaban Berhasil Terkirim</span>
+                    </div>
+                    <button id="btnRetrySubmit" type="button" onclick="retrySubmitData()" class="hidden mt-2 bg-rose-600 hover:bg-rose-700 text-white px-4 py-2 rounded-lg text-xs font-bold transition shadow-sm items-center space-x-1">
+                        <i class="fas fa-sync-alt"></i>
+                        <span>Coba Kirim Ulang Sekarang</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- 4. DASHBOARD PANEL GURU -->
+        <div id="teacherDashboardSection" class="hidden space-y-6">
+            <div class="bg-white rounded-2xl shadow-sm border border-slate-200 p-6 md:p-8">
+                <div class="flex flex-col md:flex-row md:items-center justify-between border-b border-slate-100 pb-4 mb-6 gap-4">
+                    <div>
+                        <h2 class="text-xl font-bold text-slate-800 flex items-center space-x-2">
+                            <i class="fas fa-tachometer-alt text-indigo-600"></i>
+                            <span>Dashboard Rekapitulasi Nilai Siswa</span>
+                        </h2>
+                        <p class="text-xs text-slate-500 mt-1">Data diurutkan otomatis dari kelas dan nomor absen terkecil.</p>
+                    </div>
+                    <div class="flex items-center space-x-2">
+                        <button type="button" onclick="fetchTeacherData()" class="px-3 py-2 bg-indigo-50 text-indigo-700 hover:bg-indigo-100 rounded-lg text-xs font-bold transition flex items-center space-x-1.5 border border-indigo-200">
+                            <i class="fas fa-sync-alt" id="refreshIcon"></i>
+                            <span>Muat Ulang Data</span>
+                        </button>
+                        <button type="button" onclick="closeTeacherDashboard()" class="px-3 py-2 bg-slate-100 text-slate-700 hover:bg-slate-200 rounded-lg text-xs font-bold transition flex items-center space-x-1.5">
+                            <i class="fas fa-sign-out-alt"></i>
+                            <span>Keluar Panel</span>
+                        </button>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-600 uppercase mb-1">Cari Nama / Kelas</label>
+                        <input type="text" id="searchTeacher" oninput="renderTeacherTable()" placeholder="Ketik nama / kelas..." class="w-full px-3.5 py-2 text-xs rounded-lg border border-slate-300 focus:ring-2 focus:ring-indigo-500 outline-none">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-600 uppercase mb-1">Filter Kelas</label>
+                        <select id="filterKelasTeacher" onchange="renderTeacherTable()" class="w-full px-3 py-2 text-xs rounded-lg border border-slate-300 focus:ring-2 focus:ring-indigo-500 outline-none bg-white">
+                            <option value="ALL">Semua Kelas</option>
+                            <option value="X. E1">X. E1</option>
+                            <option value="X. E2">X. E2</option>
+                            <option value="X. E3">X. E3</option>
+                            <option value="X. E4">X. E4</option>
+                            <option value="X. E5">X. E5</option>
+                        </select>
+                    </div>
+                    <div class="flex items-end">
+                        <div class="bg-slate-50 border border-slate-200 rounded-lg px-4 py-2 w-full flex justify-between items-center">
+                            <span class="text-xs text-slate-500 font-semibold">Total Siswa Terdata:</span>
+                            <span id="totalSiswaBadge" class="text-sm font-bold text-indigo-700">0 Siswa</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="overflow-x-auto rounded-xl border border-slate-200 custom-scrollbar">
+                    <table class="w-full text-left text-xs border-collapse">
+                        <thead>
+                            <tr class="bg-indigo-900 text-white font-bold border-b border-indigo-950">
+                                <th class="p-3">Kelas</th>
+                                <th class="p-3 text-center">Absen</th>
+                                <th class="p-3">Nama Siswa</th>
+                                <th class="p-3 text-center">Skor</th>
+                                <th class="p-3 text-center">Nilai Akhir</th>
+                                <th class="p-3 text-center">Pelanggaran</th>
+                                <th class="p-3 text-center">Aksi</th>
+                            </tr>
+                        </thead>
+                        <tbody id="teacherTableBody" class="divide-y divide-slate-100 text-slate-700 bg-white"></tbody>
+                    </table>
+                </div>
+
+                <div id="teacherTableLoader" class="py-12 text-center text-slate-400 text-xs">
+                    <i class="fas fa-spinner fa-spin text-2xl text-indigo-600 mb-2"></i>
+                    <p>Mengambil data rekap nilai dari Google Sheets...</p>
+                </div>
+
+                <div id="teacherTableEmpty" class="hidden py-12 text-center text-slate-400 text-xs">
+                    <i class="fas fa-folder-open text-3xl text-slate-300 mb-2"></i>
+                    <p>Belum ada data rekapitulasi nilai siswa yang ditemukan.</p>
+                </div>
+            </div>
+        </div>
+
+    </main>
+
+    <!-- Modal Konfirmasi Selesai Ujian (Pengganti confirm() Browser) -->
+    <div id="confirmSubmitModal" class="hidden fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+        <div class="bg-white rounded-2xl max-w-sm w-full p-6 shadow-2xl space-y-4 border border-slate-100 text-center">
+            <div class="w-14 h-14 bg-amber-100 text-amber-600 rounded-full flex items-center justify-center mx-auto text-2xl">
+                <i class="fas fa-paper-plane"></i>
+            </div>
+            <div>
+                <h3 class="font-bold text-slate-800 text-base">Konfirmasi Pengiriman</h3>
+                <p id="confirmSubmitText" class="text-xs text-slate-600 mt-2 leading-relaxed">
+                    Apakah Anda yakin ingin menyelesaikan ulangan ini dan mengirimkan semua jawaban Anda?
+                </p>
+            </div>
+            <div class="flex space-x-3 pt-2">
+                <button type="button" onclick="closeConfirmSubmitModal()" class="w-1/2 py-2.5 bg-slate-100 hover:bg-slate-200 text-slate-700 font-semibold text-xs rounded-xl transition">
+                    Batal
+                </button>
+                <button type="button" onclick="executeSubmitQuiz()" class="w-1/2 py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs rounded-xl shadow-md transition">
+                    Ya, Kirim Sekarang
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Anti-Cheat / Violations Modal -->
+    <div id="cheatModal" class="hidden fixed inset-0 bg-slate-950/90 backdrop-blur-md z-[100] flex items-center justify-center p-4">
+        <div class="bg-white rounded-2xl max-w-md w-full p-6 shadow-2xl space-y-4 border-2 border-rose-500 text-center">
+            <div class="w-16 h-16 bg-rose-100 text-rose-600 rounded-full flex items-center justify-center mx-auto text-3xl animate-bounce">
+                <i class="fas fa-exclamation-triangle"></i>
+            </div>
+            <div>
+                <h3 class="font-black text-xl text-rose-600 tracking-tight">TERDETEKSI MELAKUKAN KECURANGAN</h3>
+                <p class="text-xs text-slate-600 mt-2 leading-relaxed">
+                    Sistem mendeteksi Anda telah berpindah tab, meminimize browser, atau membuka aplikasi lain saat ulangan berlangsung. Akses pengerjaan Anda saat ini <strong>DIKUNCI</strong>.
+                </p>
+                <div class="mt-3 text-xs bg-rose-50 py-1.5 px-3 rounded-lg border border-rose-200 text-rose-800 font-semibold inline-block">
+                    Total Terdeteksi: <span id="cheatCountDisplay" class="font-bold">1</span> Kali
+                </div>
+            </div>
+            <div class="bg-rose-50 p-3.5 rounded-xl border border-rose-200 text-left space-y-2">
+                <label class="block text-xs font-bold text-rose-800 uppercase">Masukkan Token Perizinan Guru</label>
+                <input type="password" id="inputCheatToken" placeholder="Minta token unlock ke guru" class="w-full px-4 py-2.5 rounded-lg border border-rose-300 focus:ring-2 focus:ring-rose-500 text-sm outline-none bg-white">
+                <p id="cheatTokenErrorMsg" class="hidden text-xs text-rose-600 font-bold">Token Perizinan Salah! Akses tetap dikunci.</p>
+            </div>
+            <button type="button" onclick="verifyCheatToken()" class="w-full py-3 bg-rose-600 hover:bg-rose-700 text-white font-bold text-sm rounded-xl shadow-md transition flex items-center justify-center space-x-2">
+                <i class="fas fa-unlock"></i>
+                <span>Verifikasi Token & Lanjutkan Ulangan</span>
+            </button>
+        </div>
+    </div>
+
+    <!-- Modal Login Guru -->
+    <div id="teacherLoginModal" class="hidden fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+        <div class="bg-white rounded-2xl max-w-sm w-full p-6 shadow-2xl space-y-4 border border-slate-100">
+            <div class="flex justify-between items-center border-b pb-3">
+                <h3 class="font-bold text-slate-800 text-base flex items-center space-x-2">
+                    <i class="fas fa-user-shield text-indigo-600"></i>
+                    <span>Login Panel Guru</span>
+                </h3>
+                <button type="button" onclick="closeTeacherLoginModal()" class="text-slate-400 hover:text-slate-600 text-sm">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <form onsubmit="event.preventDefault(); processTeacherLogin();" class="space-y-3">
+                <div>
+                    <label class="block text-xs font-semibold text-slate-700 uppercase mb-1">Username Guru</label>
+                    <input type="text" id="teacherUsernameInput" required placeholder="Masukkan username" class="w-full px-3.5 py-2 rounded-lg border border-slate-300 focus:ring-2 focus:ring-indigo-500 text-xs outline-none">
+                </div>
+                <div>
+                    <label class="block text-xs font-semibold text-slate-700 uppercase mb-1">Password Guru</label>
+                    <input type="password" id="teacherPasswordInput" required placeholder="Masukkan password" class="w-full px-3.5 py-2 rounded-lg border border-slate-300 focus:ring-2 focus:ring-indigo-500 text-xs outline-none">
+                </div>
+                <p id="teacherLoginErrorMsg" class="hidden text-xs text-rose-600 font-semibold mt-1">Username atau Password Guru salah!</p>
+                
+                <div class="flex justify-end space-x-2 pt-2">
+                    <button type="button" onclick="closeTeacherLoginModal()" class="px-4 py-2 text-xs font-semibold text-slate-600 hover:bg-slate-100 rounded-lg">Batal</button>
+                    <button type="submit" class="px-4 py-2 text-xs font-semibold bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg">Masuk Panel</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Modal Token Guru -->
+    <div id="tokenModal" class="hidden fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+        <div class="bg-white rounded-2xl max-w-sm w-full p-6 shadow-2xl space-y-4 border border-slate-100">
+            <div class="flex justify-between items-center border-b pb-3">
+                <h3 class="font-bold text-slate-800 text-base flex items-center space-x-2">
+                    <i class="fas fa-key text-indigo-600"></i>
+                    <span>Verifikasi Token Guru</span>
+                </h3>
+                <button type="button" onclick="closeTokenModal()" class="text-slate-400 hover:text-slate-600 text-sm">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <p class="text-xs text-slate-500">Masukkan token guru untuk membuka izin pengerjaan ulang siswa.</p>
+            <div>
+                <input type="password" id="inputTokenGuru" placeholder="Masukkan Token Guru" class="w-full px-4 py-2.5 rounded-lg border border-slate-300 focus:ring-2 focus:ring-indigo-500 text-sm outline-none">
+                <p id="tokenErrorMsg" class="hidden text-xs text-rose-600 font-semibold mt-1">Token salah! Akses ditolak.</p>
+            </div>
+            <div class="flex justify-end space-x-2 pt-2">
+                <button type="button" onclick="closeTokenModal()" class="px-4 py-2 text-xs font-semibold text-slate-600 hover:bg-slate-100 rounded-lg">Batal</button>
+                <button type="button" onclick="verifyTeacherToken()" class="px-4 py-2 text-xs font-semibold bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg">Buka Akses</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('keydown', function(e) {
+            if (
+                e.keyCode === 123 || 
+                (e.ctrlKey && e.shiftKey && (e.keyCode === 73 || e.keyCode === 74)) || 
+                (e.ctrlKey && (e.keyCode === 67 || e.keyCode === 88 || e.keyCode === 85 || e.keyCode === 83)) 
+            ) {
+                e.preventDefault();
+                return false;
+            }
+        });
+
+        const TEACHER_USER = "admin";
+        const TEACHER_PASS = "guruhebat2026";
+        const SECRET_TEACHER_TOKEN = "GURU2026";
+        const STUDENT_QUIZ_TOKEN = "MTK2026"; 
+        const TOTAL_DURATION_SECONDS = 70 * 60; // 70 Menit
+        const TARGET_ITEM_COUNT = 10; // 10 Soal Acak Terpilih
+
+        let isQuizActive = false;
+        let isCheated = false;
+        let violationCount = 0;
+
+        const matchingOptions51 = [
+            { code: "A", text: "$(2x-3)(2x+3)=0$" },
+            { code: "B", text: "$2xkuadrat-5x-3=0$" },
+            { code: "C", text: "$x=4$" },
+            { code: "D", text: "$a=3, b=-5, c=2$" },
+            { code: "E", text: "$x=2$ atau $x=5$" }
+        ];
+
+        const matchingOptions52 = [
+            { code: "A", text: "$D < 0$ (Akar tidak real)" },
+            { code: "B", text: "$10$" },
+            { code: "C", text: "$D = 0$ (Akar kembar)" },
+            { code: "D", text: "$-4$" },
+            { code: "E", text: "$4$" }
+        ];
+
+        const bankSoalMaster = [
+            // BAGIAN 1: SOAL MUDAH (Nomor 1 – 20)
+            { id: 1, type: "single", text: "Bentuk umum $ax^2 + bx + c = 0$ dari persamaan kuadrat $3x(x - 2) = 5$ adalah...", options: ["A. $3x^2 - 6x - 5 = 0$", "B. $3x^2 - 6x + 5 = 0$", "C. $3x^2 - 2x - 5 = 0$", "D. $3x^2 - 2x + 5 = 0$", "E. $3x^2 + 6x - 5 = 0$"], answer: 0 },
+            { id: 2, type: "single", text: "Akar-akar penyelesaian dari persamaan kuadrat $x^2 - 5x + 6 = 0$ adalah...", options: ["A. $x = 1$ atau $x = 6$", "B. $x = -2$ atau $x = -3$", "C. $x = 2$ atau $x = 3$", "D. $x = -1$ atau $x = -6$", "E. $x = 2$ atau $x = -3$"], answer: 2 },
+            { id: 3, type: "single", text: "Himpunan penyelesaian dari $x^2 - 9 = 0$ adalah...", options: ["A. $\\{-3\\}$", "B. $\\{3\\}$", "C. $\\{-3, 3\\}$", "D. $\\{0, 3\\}$", "E. $\\{-9, 9\\}$"], answer: 2 },
+            { id: 4, type: "single", text: "Nilai diskriminan ($D = b^2 - 4ac$) dari persamaan kuadrat $2x^2 - 4x + 3 = 0$ adalah...", options: ["A. $40$", "B. $8$", "C. $-8$", "D. $-40$", "E. $-16$"], answer: 2 },
+            { id: 5, type: "single", text: "Jika $x_1$ dan $x_2$ adalah akar-akar dari $x^2 - 8x + 12 = 0$, nilai dari $x_1 + x_2$ adalah...", options: ["A. $-12$", "B. $-8$", "C. $8$", "D. $12$", "E. $16$"], answer: 2 },
+            { id: 6, type: "single", text: "Hasil kali akar-akar ($x_1 \\cdot x_2$) dari persamaan kuadrat $3x^2 + 9x - 15 = 0$ adalah...", options: ["A. $-5$", "B. $-3$", "C. $3$", "D. $5$", "E. $15$"], answer: 0 },
+            { id: 7, type: "single", text: "Jenis akar dari persamaan kuadrat $x^2 - 6x + 9 = 0$ adalah...", options: ["A. Real dan berbeda", "B. Real dan kembar", "C. Tidak real / imajiner", "D. Rasional dan berbeda", "E. Irrasional"], answer: 1 },
+            { id: 8, type: "single", text: "Persamaan kuadrat yang memiliki akar-akar $-3$ dan $5$ adalah...", options: ["A. $x^2 - 2x - 15 = 0$", "B. $x^2 + 2x - 15 = 0$", "C. $x^2 - 8x + 15 = 0$", "D. $x^2 + 8x + 15 = 0$", "E. $x^2 - 2x + 15 = 0$"], answer: 0 },
+            { id: 9, type: "single", text: "Salah satu akar dari $x^2 + kx - 12 = 0$ adalah $3$. Nilai $k$ adalah...", options: ["A. $-1$", "B. $1$", "C. $3$", "D. $4$", "E. $7$"], answer: 1 },
+            { id: 10, type: "single", text: "Penyelesaian dari $2x^2 - 7x + 3 = 0$ adalah...", options: ["A. $x = 3$ atau $x = \\frac{1}{2}$", "B. $x = -3$ atau $x = -\\frac{1}{2}$", "C. $x = 3$ atau $x = -\\frac{1}{2}$", "D. $x = -3$ atau $x = \\frac{1}{2}$", "E. $x = 6$ atau $x = 1$"], answer: 0 },
+            { id: 11, type: "single", text: "Akar-akar dari $4x^2 - 12x + 9 = 0$ adalah...", options: ["A. $x_1 = x_2 = \\frac{3}{2}$", "B. $x_1 = x_2 = -\\frac{3}{2}$", "C. $x_1 = 3, x_2 = 2$", "D. $x_1 = -3, x_2 = -2$", "E. Tidak memiliki akar real"], answer: 0 },
+            { id: 12, type: "single", text: "Nilai $c$ agar $x^2 - 10x + c = 0$ memiliki akar kembar adalah...", options: ["A. $5$", "B. $10$", "C. $20$", "D. $25$", "E. $100$"], answer: 3 },
+            { id: 13, type: "single", text: "Bentuk pemfaktoran dari $2x^2 + 5x - 3 = 0$ adalah...", options: ["A. $(2x - 1)(x + 3) = 0$", "B. $(2x + 1)(x - 3) = 0$", "C. $(2x - 3)(x + 1) = 0$", "D. $(2x + 3)(x - 1) = 0$", "E. $(x + 3)(x - 1) = 0$"], answer: 0 },
+            { id: 14, type: "single", text: "Jika $D > 0$ dan berupa bilangan kuadrat sempurna, maka sifat akar-akar persamaan kuadrat adalah...", options: ["A. Real, berbeda, dan rasional", "B. Real, berbeda, dan irrasional", "C. Real dan kembar", "D. Imajiner", "E. Sama dengan nol"], answer: 0 },
+            { id: 15, type: "single", text: "Persamaan kuadrat yang akar-akarnya dua kali akar-akar persamaan $x^2 - 3x + 2 = 0$ adalah...", options: ["A. $x^2 - 6x + 8 = 0$", "B. $x^2 - 6x + 4 = 0$", "C. $x^2 - 3x + 8 = 0$", "D. $2x^2 - 6x + 4 = 0$", "E. $x^2 + 6x + 8 = 0$"], answer: 0 },
+            { id: 16, type: "single", text: "Nilai $p$ agar persamaan $x^2 + px + 16 = 0$ tidak memiliki akar real adalah...", options: ["A. $-8 < p < 8$", "B. $p < -8$ atau $p > 8$", "C. $-4 < p < 4$", "D. $p < -4$ atau $p > 4$", "E. $p = 8$"], answer: 0 },
+            { id: 17, type: "single", text: "Akar kuadrat terkecil dari $x^2 - x - 12 = 0$ adalah...", options: ["A. $-4$", "B. $-3$", "C. $3$", "D. $4$", "E. $0$"], answer: 1 },
+            { id: 18, type: "single", text: "Jumlah kuadrat akar-akar ($x_1^2 + x_2^2$) dari $x^2 - 4x + 3 = 0$ adalah...", options: ["A. $7$", "B. $10$", "C. $13$", "D. $16$", "E. $25$"], answer: 1 },
+            { id: 19, type: "single", text: "Akar-akar dari $x^2 - 5x = 0$ adalah...", options: ["A. $x = 0$ atau $x = 5$", "B. $x = 0$ atau $x = -5$", "C. $x = 5$ saja", "D. $x = -5$ saja", "E. $x = 1$ atau $x = 5$"], answer: 0 },
+            { id: 20, type: "single", text: "Jika $x = 2$ adalah salah satu akar dari $2x^2 + ax - 6 = 0$, maka akar yang lainnya adalah...", options: ["A. $-3$", "B. $-\\frac{3}{2}$", "C. $\\frac{3}{2}$", "D. $3$", "E. $-1$"], answer: 1 },
+
+            // BAGIAN 2: SOAL SEDANG (Nomor 21 – 30)
+            { id: 21, type: "single", text: "Jika $x_1$ dan $x_2$ adalah akar-akar dari $2x^2 - 6x + 1 = 0$, maka nilai dari $\\frac{1}{x_1} + \\frac{1}{x_2}$ adalah...", options: ["A. $3$", "B. $6$", "C. $13$", "D. $16$", "E. $-6$"], answer: 1 },
+            { id: 22, type: "single", text: "Akar-akar persamaan $x^2 - px + 27 = 0$ adalah $\\alpha$ dan $\\beta$. Jika $\\alpha = 3\\beta$ dan $\\alpha, \\beta > 0$, maka nilai $p$ adalah...", options: ["A. $8$", "B. $10$", "C. $12$", "D. $14$", "E. $16$"], answer: 2 },
+            { id: 23, type: "single", text: "Sebuah lapangan berbentuk persegi panjang memiliki keliling $34\\text{ m}$ dan luas $60\\text{ m}^2$. Panjang lapangan tersebut adalah...", options: ["A. $10\\text{ m}$", "B. $12\\text{ m}$", "C. $15\\text{ m}$", "D. $20\\text{ m}$", "E. $24\\text{ m}$"], answer: 1 },
+            { id: 24, type: "single", text: "Suatu bilangan positif jika dikurangi 3 lalu dikuadratkan menghasilkan nilai yang sama dengan 4 kali bilangan itu ditambah 9. Bilangan tersebut adalah...", options: ["A. $6$", "B. $8$", "C. $10$", "D. $12$", "E. $15$"], answer: 2 },
+            { id: 25, type: "single", text: "Jika akar-akar $x^2 + (k - 1)x + k + 2 = 0$ bernilai saling berlawanan ($x_1 = -x_2$), maka nilai $k$ dan hasil kali akarnya berturut-turut adalah...", options: ["A. $k = 1$ dan $x_1 x_2 = 3$", "B. $k = 1$ dan $x_1 x_2 = -3$", "C. $k = -1$ dan $x_1 x_2 = 1$", "D. $k = 2$ dan $x_1 x_2 = 4$", "E. $k = 0$ dan $x_1 x_2 = 2$"], answer: 0 },
+            { id: 26, type: "single", text: "Persamaan kuadrat baru yang akar-akarnya $\\alpha + 1$ dan $\\beta + 1$ dari akar-akar $x^2 - 5x + 4 = 0$ adalah...", options: ["A. $x^2 - 7x + 10 = 0$", "B. $x^2 - 7x + 8 = 0$", "C. $x^2 - 5x + 10 = 0$", "D. $x^2 + 7x + 10 = 0$", "E. $x^2 - 3x + 2 = 0$"], answer: 0 },
+            { id: 27, type: "single", text: "Dua buah bilangan cacah genap berurutan memiliki hasil kali $168$. Jumlah kedua bilangan tersebut adalah...", options: ["A. $22$", "B. $26$", "C. $30$", "D. $34$", "E. $38$"], answer: 1 },
+            { id: 28, type: "single", text: "Nilai $m$ agar persamaan kuadrat $mx^2 - (m + 2)x + 2 = 0$ memiliki akar-akar rasional untuk semua nilai $m$ bulat positif adalah...", options: ["A. $m = 1$ saja", "B. $m = 2$ saja", "C. Semua $m$ bulat positif", "D. $m > 2$", "E. Tidak ada nilai $m$ yang memenuhi"], answer: 2 },
+            { id: 29, type: "single", text: "Akar-akar $x^2 - 3x + a = 0$ adalah $x_1$ dan $x_2$. Jika $x_1^3 + x_2^3 = 9$, maka nilai $a$ adalah...", options: ["A. $1$", "B. $2$", "C. $3$", "D. $4$", "E. $5$"], answer: 1 },
+            { id: 30, type: "single", text: "Sisi-sisi sebuah segitiga siku-siku membentuk tiga suku berurutan dari barisan aritmatika. Jika luas segitiga adalah $54\\text{ cm}^2$, panjang hipotenusanya adalah...", options: ["A. $12\\text{ cm}$", "B. $15\\text{ cm}$", "C. $18\\text{ cm}$", "D. $21\\text{ cm}$", "E. $24\\text{ cm}$"], answer: 1 },
+
+            // BAGIAN 3: SOAL MCMA / PILIHAN GANDA KOMPLEKS (Nomor 31 – 40)
+            { id: 31, type: "multiple", text: "Diberikan persamaan kuadrat $x^2 - 6x + 8 = 0$. Pernyataan berikut yang BENAR adalah... (Jawaban bisa lebih dari satu)", options: ["Nilai $x_1 + x_2 = 6$", "Nilai $x_1 \\cdot x_2 = 8$", "Akar-akarnya adalah $x = 2$ dan $x = 4$", "Nilai diskriminannya $D = -4$", "Kedua akarnya bernilai negatif"], answer: [0, 1, 2] },
+            { id: 32, type: "multiple", text: "Diketahui persamaan kuadrat $2x^2 + 4x - 6 = 0$. Pernyataan yang BENAR adalah... (Jawaban bisa lebih dari satu)", options: ["Nilai $D = 64$", "Memiliki dua akar real yang berbeda", "Jumlah akar-akarnya adalah $-2$", "Hasil kali akar-akarnya adalah $3$", "Salah satu akarnya adalah $x = -1$"], answer: [0, 1, 2] },
+            { id: 33, type: "multiple", text: "Persamaan kuadrat $x^2 + (p - 2)x + 9 = 0$ memiliki akar kembar. Nilai $p$ yang memenuhi adalah... (Jawaban bisa lebih dari satu)", options: ["$p = 8$", "$p = -4$", "$p = 4$", "$p = -8$", "$p = 0$"], answer: [0, 1] },
+            { id: 34, type: "multiple", text: "Jika $x_1$ dan $x_2$ adalah akar-akar dari $x^2 - 4x - 5 = 0$, manakah hubungan matematis yang BENAR? (Jawaban bisa lebih dari satu)", options: ["$x_1^2 + x_2^2 = 26$", "$|x_1 - x_2| = 6$", "$\\frac{1}{x_1} + \\frac{1}{x_2} = -\\frac{4}{5}$", "$x_1 \\cdot x_2 = 5$", "$x_1 + x_2 = -4$"], answer: [0, 1, 2] },
+            { id: 35, type: "multiple", text: "Diberikan persamaan kuadrat $x^2 + 2x + 5 = 0$. Manakah sifat-sifat yang BENAR? (Jawaban bisa lebih dari satu)", options: ["Diskriminan $D = -16$", "Tidak memiliki akar real", "Grafik fungsi tidak memotong sumbu-X", "Hasil kali akar-akarnya bernilai negatif", "Jumlah akar-akarnya adalah $2$"], answer: [0, 1, 2] },
+            { id: 36, type: "multiple", text: "Diberikan persamaan $x^2 - bx + c = 0$ dengan akar-akar $x_1 = 3$ dan $x_2 = 5$. Pernyataan yang BENAR adalah... (Jawaban bisa lebih dari satu)", options: ["Nilai $b = 8$", "Nilai $c = 15$", "Nilai $D = 4$", "Nilai $b + c = 20$", "Persamaan kuadratnya $x^2 + 8x + 15 = 0$"], answer: [0, 1, 2] },
+            { id: 37, type: "multiple", text: "Persamaan $x^2 - kx + k = 0$ memiliki dua akar real yang berbeda jika... (Jawaban bisa lebih dari satu)", options: ["$k < 0$", "$k > 4$", "$0 < k < 4$", "$k = 4$", "$k = 0$"], answer: [0, 1] },
+            { id: 38, type: "multiple", text: "Manakah di antara pilihan berikut yang merupakan bentuk pemfaktoran yang BENAR? (Jawaban bisa lebih dari satu)", options: ["$x^2 - 16 = (x - 4)(x + 4)$", "$3x^2 - 12x = 3x(x - 4)$", "$x^2 - 5x + 6 = (x - 2)(x - 3)$", "$x^2 + 4 = (x + 2)(x + 2)$", "$2x^2 + x - 3 = (2x - 1)(x + 3)$"], answer: [0, 1, 2] },
+            { id: 39, type: "multiple", text: "Jika akar-akar dari $x^2 - 3x - 1 = 0$ adalah $\\alpha$ dan $\\beta$, maka... (Jawaban bisa lebih dari satu)", options: ["$\\alpha + \\beta = 3$", "$\\alpha \\cdot \\beta = -1$", "$\\alpha^2 + \\beta^2 = 11$", "$\\alpha - \\beta = 5$", "$\\frac{1}{\\alpha} + \\frac{1}{\\beta} = 3$"], answer: [0, 1, 2] },
+            { id: 40, type: "multiple", text: "Suatu persamaan kuadrat $ax^2 + bx + c = 0$ memotong sumbu-X di dua titik positif jika... (Jawaban bisa lebih dari satu)", options: ["$D > 0$", "$\\frac{b}{a} < 0$", "$\\frac{c}{a} > 0$", "$b^2 - 4ac < 0$", "$a < 0$ dan $c < 0$ selalu"], answer: [0, 1, 2] },
+
+            // BAGIAN 4: SOAL TKA / HOTS (Nomor 41 – 50)
+            { id: 41, type: "single", text: "Diberikan $\\alpha$ adalah akar dari $x^2 - x - 1 = 0$. Nilai dari $\\alpha^5 - 5\\alpha$ adalah...", options: ["A. $1$", "B. $2$", "C. $3$", "D. $4$", "E. $5$"], answer: 2 },
+            { id: 42, type: "single", text: "Banyaknya nilai bulat $k$ agar persamaan $(k - 2)x^2 - 2kx + k + 3 = 0$ memiliki dua akar real positif yang kembar adalah...", options: ["A. $2$", "B. $3$", "C. $4$", "D. $5$", "E. $6$"], answer: 4 },
+            { id: 43, type: "single", text: "Sebuah roket diluncurkan dengan lintasan $h(t) = 40t - 5t^2$ (meter). Roket berada pada ketinggian tidak kurang dari $60\\text{ meter}$ selama rentang waktu...", options: ["A. $2\\text{ detik}$ sampai $6\\text{ detik}$", "B. $4\\text{ detik}$ sampai $6\\text{ detik}$", "C. $6\\text{ detik}$ sampai $10\\text{ detik}$", "D. $8\\text{ detik}$ sampai $10\\text{ detik}$", "E. $10\\text{ detik}$"], answer: 0 },
+            { id: 44, type: "single", text: "Jika $x_1$ dan $x_2$ adalah akar-akar $x^2 - x - 3 = 0$, maka nilai dari $x_1^3 + x_2^3$ adalah...", options: ["A. $10$", "B. $12$", "C. $14$", "D. $16$", "E. $18$"], answer: 0 },
+            { id: 45, type: "single", text: "Garis $y = 2x + c$ memotong parabola $y = x^2 - 4x + 5$ di dua titik berbeda. Batas nilai $c$ adalah...", options: ["A. $c > -4$", "B. $c < -4$", "C. $c > 4$", "D. $c < 4$", "E. $-4 < c < 4$"], answer: 0 },
+            { id: 46, type: "single", text: "Jika persamaan $x^2 + ax + b = 0$ dan $x^2 + bx + a = 0$ (dengan $a \\neq b$) memiliki satu akar persekutuan yang sama, maka nilai $a + b$ adalah...", options: ["A. $-2$", "B. $-1$", "C. $0$", "D. $1$", "E. $2$"], answer: 1 },
+            { id: 47, type: "single", text: "Seorang arsitek merancang gerbang masuk sebuah taman berpola parabola.<br><div class='mt-3 mb-2 text-center'><img src='47.png' alt='Model Gerbang Taman' class='mx-auto rounded-xl shadow-md max-h-72 w-auto object-contain border border-slate-200'></div>Gerbang melintasi tanah di titik $(0,0)$ dan $(4,0)$, serta memiliki tinggi maksimum $4\\text{ meter}$ pada titik $(2,4)$. Persamaan fungsi kuadrat $y = f(x)$ yang sesuai adalah...", options: ["A. $y = -x^2 - 4x$", "B. $y = x^2 + 3x$", "C. $y = -x^2 + 4x$", "D. $y = x^2 + 4x$", "E. $y = -x^2 + 3x$"], answer: 2 },
+            { id: 48, type: "single", text: "Jika persamaan $x^2 - 2ax + a + 6 = 0$ mempunyai dua akar real yang keduanya lebih besar dari $1$, maka batas nilai $a$ adalah...", options: ["A. $a > 3$", "B. $-2 < a < 3$", "C. $a < -2$ atau $a > 3$", "D. $3 < a < 7$", "E. $a > 2$"], answer: 3 },
+            { id: 49, type: "single", text: "Diketahui $f(x) = x^2 + bx + c$. Jika $f(1) = 0$ dan nilai minimum fungsi adalah $-4$, maka nilai $c$ yang mungkin adalah...", options: ["A. $-5$ atau $3$", "B. $-3$ atau $5$", "C. $-4$ atau $4$", "D. $-3$ atau $3$", "E. $0$ atau $-4$"], answer: 1 },
+            { id: 50, type: "single", text: "Suatu fungsi kuadrat $y = ax^2 + bx + c$ memotong sumbu-X di $(1,0)$ dan $(3,0)$ serta melalui $(0,6)$. Nilai $a + b + c$ adalah...", options: ["A. $0$", "B. $2$", "C. $4$", "D. $6$", "E. $8$"], answer: 0 },
+
+            // BAGIAN 5: SOAL MENJODOHKAN (Nomor 51 dan 52)
+            { id: 51, type: "matching", matchSet: 51, text: "Jodohkanlah setiap pernyataan berikut tentang pemfaktoran dengan pilihan jawaban yang pas:", items: ["1. Nilai $a, b, c$ dari $3x^2 - 5x + 2 = 0$", "2. Akar-akar dari $x^2 - 7x + 10 = 0$", "3. Bentuk baku dari $(2x + 1)(x - 3) = 0$", "4. Hasil pemfaktoran dari $4x^2 - 9 = 0$", "5. Akar kembar dari $x^2 - 8x + 16 = 0$"], answer: ["D", "E", "B", "A", "C"] },
+            { id: 52, type: "matching", matchSet: 52, text: "Jodohkanlah setiap pernyataan berikut tentang Diskriminan & Vieta dengan pilihan jawaban yang pas:", items: ["1. Nilai diskriminan ($D$) dari $x^2 - 6x + 9 = 0$", "2. Nilai jumlah akar ($x_1 + x_2$) dari $2x^2 - 8x + 5 = 0$", "3. Hasil kali akar ($x_1 \\cdot x_2$) dari $3x^2 + 6x - 12 = 0$", "4. Nilai $p$ positif agar $x^2 - px + 25 = 0$ berakar kembar", "5. Sifat akar-akar dari $x^2 + 3x + 5 = 0$"], answer: ["C", "E", "D", "B", "A"] }
+        ];
+
+        let questionsData = []; 
+        let currentQuestion = 0;
+        let userAnswers = new Array(TARGET_ITEM_COUNT).fill(null);
+        let studentData = {};
+        let timerInterval = null;
+        let startTime = null;
+        let cachedPayload = null;
+
+        // --- FUNGSI PENGACAKAN (SHUFFLE) ---
+        function shuffleArray(array) {
+            let arr = [...array];
+            for (let i = arr.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [arr[i], arr[j]] = [arr[j], arr[i]];
+            }
+            return arr;
+        }
+
+        // --- GENERATE 10 SOAL ACAK PORSI SEIMBANG ---
+        function generateRandom10Questions() {
+            // 1. Ambil 4 Soal Mudah (ID 1-20)
+            const easyPool = bankSoalMaster.filter(q => q.id >= 1 && q.id <= 20);
+            const selectedEasy = shuffleArray(easyPool).slice(0, 4);
+
+            // 2. Ambil 2 Soal Sedang (ID 21-30)
+            const mediumPool = bankSoalMaster.filter(q => q.id >= 21 && q.id <= 30);
+            const selectedMedium = shuffleArray(mediumPool).slice(0, 2);
+
+            // 3. Ambil 2 Soal MCMA (ID 31-40)
+            const mcmaPool = bankSoalMaster.filter(q => q.id >= 31 && q.id <= 40);
+            const selectedMcma = shuffleArray(mcmaPool).slice(0, 2);
+
+            // 4. Ambil 1 Soal HOTS (ID 41-50)
+            const hotsPool = bankSoalMaster.filter(q => q.id >= 41 && q.id <= 50);
+            const selectedHots = shuffleArray(hotsPool).slice(0, 1);
+
+            // 5. Ambil 1 Soal Menjodohkan (Antara ID 51 atau 52 secara acak)
+            const matchingPool = bankSoalMaster.filter(q => q.id === 51 || q.id === 52);
+            const selectedMatching = shuffleArray(matchingPool).slice(0, 1);
+
+            // Gabungkan 10 soal
+            let combined10 = [
+                ...selectedEasy,
+                ...selectedMedium,
+                ...selectedMcma,
+                ...selectedHots,
+                ...selectedMatching
+            ];
+
+            // Acak urutan 10 soal tersebut
+            combined10 = shuffleArray(combined10);
+
+            // Acak letak/urutan opsi pilihan jawaban untuk setiap soal (kecuali jenis matching)
+            questionsData = combined10.map(q => {
+                let qCopy = JSON.parse(JSON.stringify(q));
+                if (qCopy.type === 'single') {
+                    const originalOptions = qCopy.options.map((opt, idx) => ({
+                        text: opt.replace(/^[A-E]\.\s*/, ''), 
+                        isCorrect: idx === qCopy.answer
+                    }));
+                    const shuffledOpts = shuffleArray(originalOptions);
+                    
+                    const labels = ["A", "B", "C", "D", "E"];
+                    qCopy.options = shuffledOpts.map((item, idx) => `${labels[idx]}. ${item.text}`);
+                    qCopy.answer = shuffledOpts.findIndex(item => item.isCorrect);
+
+                } else if (qCopy.type === 'multiple') {
+                    const originalOptions = qCopy.options.map((opt, idx) => ({
+                        text: opt,
+                        isCorrect: qCopy.answer.includes(idx)
+                    }));
+                    const shuffledOpts = shuffleArray(originalOptions);
+                    
+                    qCopy.options = shuffledOpts.map(item => item.text);
+                    qCopy.answer = shuffledOpts
+                        .map((item, idx) => item.isCorrect ? idx : -1)
+                        .filter(idx => idx !== -1);
+                }
+                return qCopy;
+            });
+        }
+
+        // --- SISTEM ANTI-CHEAT ---
+        function triggerCheatLock() {
+            if (!isQuizActive) return;
+            
+            violationCount++;
+            isCheated = true;
+            
+            localStorage.setItem('quiz_cheat_locked', 'true');
+            localStorage.setItem('quiz_violation_count', violationCount.toString());
+            saveCurrentSession();
+
+            if (timerInterval) clearInterval(timerInterval);
+
+            document.getElementById('cheatCountDisplay').innerText = violationCount;
+            document.getElementById('inputCheatToken').value = '';
+            document.getElementById('cheatTokenErrorMsg').classList.add('hidden');
+            document.getElementById('cheatModal').classList.remove('hidden');
+        }
+
+        function verifyCheatToken() {
+            const tokenInput = document.getElementById('inputCheatToken').value.trim();
+            if (tokenInput === SECRET_TEACHER_TOKEN) {
+                isCheated = false;
+                localStorage.removeItem('quiz_cheat_locked');
+                saveCurrentSession();
+
+                document.getElementById('cheatModal').classList.add('hidden');
+                showUnlockToast();
+                startTimer();
+            } else {
+                document.getElementById('cheatTokenErrorMsg').classList.remove('hidden');
+            }
+        }
+
+        function showUnlockToast() {
+            const toast = document.getElementById('unlockToast');
+            toast.classList.remove('hidden');
+            setTimeout(() => {
+                toast.classList.add('hidden');
+            }, 3000);
+        }
+
+        document.addEventListener('visibilitychange', () => {
+            if (document.hidden && isQuizActive && !isCheated) {
+                triggerCheatLock();
+            }
+        });
+
+        window.addEventListener('blur', () => {
+            if (isQuizActive && !isCheated) {
+                triggerCheatLock();
+            }
+        });
+
+        function checkCheatStatus() {
+            const isLocked = localStorage.getItem('quiz_cheat_locked');
+            const storedViolations = localStorage.getItem('quiz_violation_count');
+            if (storedViolations) {
+                violationCount = parseInt(storedViolations) || 0;
+            }
+
+            if (isLocked === 'true') {
+                isCheated = true;
+                document.getElementById('cheatCountDisplay').innerText = violationCount;
+                document.getElementById('cheatModal').classList.remove('hidden');
+            }
+        }
+
+        // --- MANAJEMEN APLIKASI ---
+
+        function initAbsenDropdown() {
+            const selectAbsen = document.getElementById('absenSiswa');
+            selectAbsen.innerHTML = '<option value="" disabled selected>Pilih Absen</option>';
+            for (let i = 1; i <= 36; i++) {
+                const opt = document.createElement('option');
+                opt.value = i;
+                opt.innerText = `Absen ${i}`;
+                selectAbsen.appendChild(opt);
+            }
+        }
+
+        async function checkIdentityAvailability() {
+            const kelas = document.getElementById('kelasSiswa').value;
+            const absen = document.getElementById('absenSiswa').value;
+            const scriptUrl = document.getElementById('scriptUrl').value.trim();
+            const alertBox = document.getElementById('blockedAlert');
+            const alertMsg = document.getElementById('blockedMessage');
+            const btnNext = document.getElementById('btnNextRules');
+            const loader = document.getElementById('checkingLoader');
+
+            if (!kelas || !absen) return;
+
+            if (localStorage.getItem(`completed_quiz_math_${kelas}_${absen}`)) {
+                alertMsg.innerText = `[Akses Ditolak] Siswa Kelas ${kelas} - Nomor Absen ${absen} tercatat telah menyelesaikan ulangan di perangkat ini.`;
+                alertBox.classList.remove('hidden');
+                btnNext.disabled = true;
+                btnNext.classList.add('opacity-50', 'cursor-not-allowed');
+                return;
+            }
+
+            if (scriptUrl) {
+                loader.classList.remove('hidden');
+                btnNext.disabled = true;
+                btnNext.classList.add('opacity-50', 'cursor-not-allowed');
+
+                try {
+                    const checkUrl = `${scriptUrl}?kelas=${encodeURIComponent(kelas)}&absen=${encodeURIComponent(absen)}&_nocache=${Date.now()}`;
+                    const response = await fetch(checkUrl);
+                    const resData = await response.json();
+
+                    if (resData.alreadySubmitted) {
+                        alertMsg.innerText = `[Akses Ditolak] Siswa Kelas ${kelas} - Nomor Absen ${absen} SUDAH MENGERJAKAN (Tercatat di Google Sheets).`;
+                        alertBox.classList.remove('hidden');
+                        btnNext.disabled = true;
+                        btnNext.classList.add('opacity-50', 'cursor-not-allowed');
+                    } else {
+                        alertBox.classList.add('hidden');
+                        btnNext.disabled = false;
+                        btnNext.classList.remove('opacity-50', 'cursor-not-allowed');
+                    }
+                } catch (err) {
+                    alertBox.classList.add('hidden');
+                    btnNext.disabled = false;
+                    btnNext.classList.remove('opacity-50', 'cursor-not-allowed');
+                } finally {
+                    loader.classList.add('hidden');
+                }
+            }
+        }
+
+        document.getElementById('kelasSiswa').addEventListener('change', checkIdentityAvailability);
+        document.getElementById('absenSiswa').addEventListener('change', checkIdentityAvailability);
+
+        function validateAndShowRules() {
+            const nama = document.getElementById('namaSiswa').value.trim();
+            const kelas = document.getElementById('kelasSiswa').value;
+            const absen = document.getElementById('absenSiswa').value;
+            const tokenInput = document.getElementById('tokenSiswa').value.trim();
+            const scriptUrl = document.getElementById('scriptUrl').value.trim();
+
+            if (!nama || !kelas || !absen || !tokenInput) {
+                alert("Harap lengkapi seluruh data identitas dan masukkan token!");
+                return;
+            }
+
+            if (tokenInput !== STUDENT_QUIZ_TOKEN) {
+                alert("Token pengerjaan tidak valid! Silakan periksa kembali.");
+                return;
+            }
+
+            studentData = { nama, kelas, absen, scriptUrl };
+            document.getElementById('identitasSection').classList.add('hidden');
+            document.getElementById('rulesSection').classList.remove('hidden');
+        }
+
+        function backToIdentitas() {
+            document.getElementById('rulesSection').classList.add('hidden');
+            document.getElementById('identitasSection').classList.remove('hidden');
+            document.getElementById('agreeCheckbox').checked = false;
+            toggleStartQuizButton();
+        }
+
+        function toggleStartQuizButton() {
+            const checkbox = document.getElementById('agreeCheckbox');
+            const btnStart = document.getElementById('btnStartQuiz');
+            btnStart.disabled = !checkbox.checked;
+            if (checkbox.checked) {
+                btnStart.classList.remove('opacity-50', 'cursor-not-allowed');
+            } else {
+                btnStart.classList.add('opacity-50', 'cursor-not-allowed');
+            }
+        }
+
+        function startQuiz() {
+            startTime = Date.now();
+            generateRandom10Questions();
+            userAnswers = new Array(TARGET_ITEM_COUNT).fill(null);
+            isQuizActive = true;
+            violationCount = 0;
+            saveCurrentSession();
+
+            document.getElementById('rulesSection').classList.add('hidden');
+            document.getElementById('quizSection').classList.remove('hidden');
+            document.getElementById('headerTimer').classList.remove('hidden');
+            document.getElementById('headerTimer').classList.add('flex');
+            document.getElementById('btnTeacherNav').classList.add('hidden');
+
+            renderQuestionGrid();
+            loadQuestion(0);
+            startTimer();
+            checkCheatStatus();
+        }
+
+        function startTimer() {
+            if (timerInterval) clearInterval(timerInterval);
+            
+            function updateTimerDisplay() {
+                if (isCheated) return;
+
+                const elapsedSeconds = Math.floor((Date.now() - startTime) / 1000);
+                const remainingSeconds = TOTAL_DURATION_SECONDS - elapsedSeconds;
+
+                if (remainingSeconds <= 0) {
+                    clearInterval(timerInterval);
+                    document.getElementById('timerDisplay').innerText = "00:00";
+                    executeSubmitQuiz();
+                    return;
+                }
+
+                const minutes = Math.floor(remainingSeconds / 60);
+                const seconds = remainingSeconds % 60;
+                document.getElementById('timerDisplay').innerText = 
+                    `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+            }
+
+            updateTimerDisplay();
+            timerInterval = setInterval(updateTimerDisplay, 1000);
+        }
+
+        function renderQuestionGrid() {
+            const grid = document.getElementById('questionGrid');
+            grid.innerHTML = '';
+
+            for (let i = 0; i < TARGET_ITEM_COUNT; i++) {
+                const btn = document.createElement('button');
+                btn.type = 'button';
+                btn.id = `grid-btn-${i}`;
+                btn.innerText = (i + 1);
+                btn.onclick = () => loadQuestion(i);
+                btn.className = `h-9 w-full rounded-lg text-xs font-semibold flex items-center justify-center transition border ${getGridBtnStyle(i)}`;
+                grid.appendChild(btn);
+            }
+        }
+
+        function isQuestionAnswered(idx) {
+            const ans = userAnswers[idx];
+            const q = questionsData[idx];
+            if (!q) return false;
+
+            if (q.type === 'matching') {
+                if (!Array.isArray(ans)) return false;
+                return ans.length === 5 && ans.every(v => v !== "" && v !== null && v !== undefined);
+            }
+            return ans !== null && (Array.isArray(ans) ? ans.length > 0 : true);
+        }
+
+        function getGridBtnStyle(idx) {
+            const isAnswered = isQuestionAnswered(idx);
+
+            if (idx === currentQuestion) {
+                return 'bg-indigo-600 text-white border-indigo-600 shadow-sm';
+            } else if (isAnswered) {
+                return 'bg-emerald-500 text-white border-emerald-500';
+            } else {
+                return 'bg-slate-50 text-slate-700 border-slate-200 hover:bg-slate-100';
+            }
+        }
+
+        function updateGridBtnStyles() {
+            questionsData.forEach((_, idx) => {
+                const btn = document.getElementById(`grid-btn-${idx}`);
+                if (btn) btn.className = `h-9 w-full rounded-lg text-xs font-semibold flex items-center justify-center transition border ${getGridBtnStyle(idx)}`;
+            });
+        }
+
+        function loadQuestion(idx) {
+            currentQuestion = idx;
+            saveCurrentSession();
+            const q = questionsData[currentQuestion];
+
+            document.getElementById('currentQuestionNum').innerText = (currentQuestion + 1);
+            const optionsContainer = document.getElementById('optionsContainer');
+            optionsContainer.innerHTML = '';
+
+            if (q.type === 'matching') {
+                document.getElementById('questionText').innerHTML = `<b>Pertanyaan Menjodohkan:</b><br>${q.text}`;
+                
+                const curAns = Array.isArray(userAnswers[currentQuestion]) ? userAnswers[currentQuestion] : ["", "", "", "", ""];
+                const opts = q.matchSet === 51 ? matchingOptions51 : matchingOptions52;
+
+                let matchHtml = `
+                    <div class="overflow-x-auto border border-slate-200 rounded-xl bg-white shadow-sm p-4">
+                        <table class="w-full text-left text-xs md:text-sm border-collapse">
+                            <thead>
+                                <tr class="bg-indigo-50/80 text-indigo-900 border-b border-slate-200">
+                                    <th class="p-3 font-bold">Kolom A (Pernyataan)</th>
+                                    <th class="p-3 font-bold w-64 text-center">Kolom B (Pilihan Jawaban)</th>
+                                </tr>
+                            </thead>
+                            <tbody class="divide-y divide-slate-100">
+                `;
+
+                q.items.forEach((itemText, itemIdx) => {
+                    const selVal = curAns[itemIdx] || "";
+                    matchHtml += `
+                        <tr>
+                            <td class="p-3 font-medium text-slate-800">${itemText}</td>
+                            <td class="p-3 text-center">
+                                <select onchange="selectMatchingAnswerMulti(${currentQuestion}, ${itemIdx}, this.value)" class="w-full p-2.5 border border-slate-300 rounded-lg bg-white focus:ring-2 focus:ring-indigo-500 font-semibold text-xs outline-none">
+                                    <option value="" disabled ${selVal === "" ? "selected" : ""}>-- Pilih Pasangan --</option>
+                    `;
+                    opts.forEach(optB => {
+                        matchHtml += `<option value="${optB.code}" ${selVal === optB.code ? "selected" : ""}>${optB.code}. ${optB.text}</option>`;
+                    });
+                    matchHtml += `</select></td></tr>`;
+                });
+
+                matchHtml += `</tbody></table></div>`;
+                optionsContainer.innerHTML = matchHtml;
+
+            } else if (q.type === 'single') {
+                document.getElementById('questionText').innerHTML = q.text;
+                q.options.forEach((opt, optIdx) => {
+                    const isSelected = userAnswers[currentQuestion] === optIdx;
+                    const optEl = document.createElement('div');
+                    optEl.onclick = () => selectSingleOption(optIdx);
+                    optEl.className = `p-4 rounded-xl border text-sm cursor-pointer transition flex items-center justify-between ${
+                        isSelected 
+                        ? 'border-indigo-600 bg-indigo-50/60 text-indigo-900 font-medium' 
+                        : 'border-slate-200 bg-white hover:bg-slate-50 text-slate-700'
+                    }`;
+
+                    optEl.innerHTML = `
+                        <span>${opt}</span>
+                        <div class="w-5 h-5 rounded-full border flex items-center justify-center ${
+                            isSelected ? 'border-indigo-600 bg-indigo-600 text-white' : 'border-slate-300'
+                        }">
+                            ${isSelected ? '<i class="fas fa-check text-[10px]"></i>' : ''}
+                        </div>
+                    `;
+                    optionsContainer.appendChild(optEl);
+                });
+
+            } else if (q.type === 'multiple') {
+                document.getElementById('questionText').innerHTML = q.text;
+                if (!Array.isArray(userAnswers[currentQuestion])) {
+                    userAnswers[currentQuestion] = [];
+                }
+                q.options.forEach((opt, optIdx) => {
+                    const isSelected = userAnswers[currentQuestion].includes(optIdx);
+                    const optEl = document.createElement('div');
+                    optEl.onclick = () => toggleMultipleOption(optIdx);
+                    optEl.className = `p-4 rounded-xl border text-sm cursor-pointer transition flex items-center space-x-3 ${
+                        isSelected 
+                        ? 'border-indigo-600 bg-indigo-50/60 text-indigo-900 font-medium' 
+                        : 'border-slate-200 bg-white hover:bg-slate-50 text-slate-700'
+                    }`;
+
+                    optEl.innerHTML = `
+                        <div class="w-5 h-5 rounded-md border flex items-center justify-center transition-colors flex-shrink-0 ${
+                            isSelected ? 'border-indigo-600 bg-indigo-600 text-white' : 'border-slate-300 bg-white'
+                        }">
+                            ${isSelected ? '<i class="fas fa-check text-[10px]"></i>' : ''}
+                        </div>
+                        <span class="leading-normal">${opt}</span>
+                    `;
+                    optionsContainer.appendChild(optEl);
+                });
+            }
+
+            document.getElementById('prevBtn').disabled = currentQuestion === 0;
+            document.getElementById('nextBtn').innerText = currentQuestion === questionsData.length - 1 ? 'Selesai' : 'Berikutnya';
+
+            updateGridBtnStyles();
+            updateAnsweredCount();
+
+            if (window.MathJax && window.MathJax.typesetPromise) {
+                MathJax.typesetPromise();
+            }
+        }
+
+        function selectSingleOption(optIdx) {
+            userAnswers[currentQuestion] = optIdx;
+            saveCurrentSession();
+            loadQuestion(currentQuestion);
+        }
+
+        function toggleMultipleOption(optIdx) {
+            let currentAns = userAnswers[currentQuestion];
+            if (!Array.isArray(currentAns)) currentAns = [];
+
+            const pos = currentAns.indexOf(optIdx);
+            if (pos > -1) {
+                currentAns.splice(pos, 1);
+            } else {
+                currentAns.push(optIdx);
+            }
+
+            userAnswers[currentQuestion] = currentAns;
+            saveCurrentSession();
+            loadQuestion(currentQuestion);
+        }
+
+        function selectMatchingAnswerMulti(qIdx, itemIdx, val) {
+            if (!Array.isArray(userAnswers[qIdx])) {
+                userAnswers[qIdx] = ["", "", "", "", ""];
+            }
+            userAnswers[qIdx][itemIdx] = val;
+            saveCurrentSession();
+            updateGridBtnStyles();
+            updateAnsweredCount();
+        }
+
+        function navigateQuestion(direction) {
+            let nextIdx = currentQuestion + direction;
+            if (nextIdx >= 0 && nextIdx < questionsData.length) {
+                loadQuestion(nextIdx);
+            } else if (nextIdx >= questionsData.length) {
+                confirmSubmission();
+            }
+        }
+
+        function updateAnsweredCount() {
+            let answeredItemCount = 0;
+
+            for (let i = 0; i < TARGET_ITEM_COUNT; i++) {
+                if (isQuestionAnswered(i)) answeredItemCount++;
+            }
+
+            document.getElementById('answeredCount').innerText = answeredItemCount;
+        }
+
+        // --- MANAJEMEN MODAL KONFIRMASI PENGIRIMAN CUSTOM HTML ---
+        function confirmSubmission() {
+            let answeredItemCount = 0;
+
+            for (let i = 0; i < TARGET_ITEM_COUNT; i++) {
+                if (isQuestionAnswered(i)) answeredItemCount++;
+            }
+
+            const remainingItems = TARGET_ITEM_COUNT - answeredItemCount;
+
+            const textContainer = document.getElementById('confirmSubmitText');
+            if (remainingItems > 0) {
+                textContainer.innerHTML = `<span class="text-rose-600 font-semibold block mb-1">Perhatian! Masih ada ${remainingItems} soal yang belum dijawab.</span>Apakah Anda yakin tetap ingin mengirimkan jawaban sekarang?`;
+            } else {
+                textContainer.innerText = "Seluruh 10 soal telah dijawab. Apakah Anda yakin ingin menyelesaikan ulangan ini dan mengirimkan jawaban?";
+            }
+
+            document.getElementById('confirmSubmitModal').classList.remove('hidden');
+        }
+
+        function closeConfirmSubmitModal() {
+            document.getElementById('confirmSubmitModal').classList.add('hidden');
+        }
+
+        function executeSubmitQuiz() {
+            closeConfirmSubmitModal();
+            submitQuiz();
+        }
+
+        function submitQuiz() {
+            try {
+                isQuizActive = false;
+                localStorage.removeItem('quiz_cheat_locked');
+                localStorage.removeItem('quiz_violation_count');
+
+                if (timerInterval) clearInterval(timerInterval);
+
+                let scoreCount = 0;
+
+                questionsData.forEach((q, idx) => {
+                    const userAns = userAnswers[idx];
+
+                    if (q.type === 'single') {
+                        if (userAns === q.answer) scoreCount++;
+                    } else if (q.type === 'multiple') {
+                        if (Array.isArray(userAns) && Array.isArray(q.answer)) {
+                            const sortedUser = [...userAns].sort().join(',');
+                            const sortedCorrect = [...q.answer].sort().join(',');
+                            if (sortedUser === sortedCorrect) scoreCount++;
+                        }
+                    } else if (q.type === 'matching') {
+                        if (Array.isArray(userAns) && Array.isArray(q.answer)) {
+                            if (userAns.join(',') === q.answer.join(',')) scoreCount++;
+                        }
+                    }
+                });
+
+                const percentage = Math.round((scoreCount / TARGET_ITEM_COUNT) * 100);
+
+                if (studentData.kelas && studentData.absen) {
+                    localStorage.setItem(`completed_quiz_math_${studentData.kelas}_${studentData.absen}`, new Date().toISOString());
+                }
+                localStorage.removeItem('active_quiz_math_session');
+
+                document.getElementById('quizSection').classList.add('hidden');
+                document.getElementById('headerTimer').classList.add('hidden');
+                document.getElementById('resultSection').classList.remove('hidden');
+
+                document.getElementById('resNama').innerText = studentData.nama || "-";
+                document.getElementById('resKelasAbsen').innerText = `${studentData.kelas || "-"} / Absen ${studentData.absen || "-"}`;
+                document.getElementById('resSkor').innerText = `${scoreCount} / ${TARGET_ITEM_COUNT}`;
+                document.getElementById('resNilai').innerText = percentage;
+                document.getElementById('resPelanggaran').innerText = `${violationCount} kali`;
+
+                cachedPayload = {
+                    nama: studentData.nama,
+                    kelas: studentData.kelas,
+                    absen: studentData.absen,
+                    skor: `${scoreCount}/${TARGET_ITEM_COUNT}`,
+                    persentase: percentage,
+                    pelanggaran: `${violationCount} kali`
+                };
+
+                sendDataToSpreadsheet(cachedPayload);
+
+            } catch (error) {
+                console.error("Gagal mengirimkan ulangan:", error);
+            }
+        }
+
+        function sendDataToSpreadsheet(payload) {
+            const statusBox = document.getElementById('submissionStatus');
+            const statusIcon = document.getElementById('statusIcon');
+            const statusText = document.getElementById('statusText');
+            const btnRetry = document.getElementById('btnRetrySubmit');
+
+            statusBox.className = "mt-6 p-4 bg-indigo-50 rounded-xl text-xs font-semibold text-indigo-700 flex flex-col items-center justify-center space-y-2 border border-indigo-200";
+            statusIcon.className = "fas fa-spinner fa-spin text-base";
+            statusText.innerText = "Mengirimkan data nilai ke Google Sheets...";
+            btnRetry.classList.add('hidden');
+
+            if (!navigator.onLine) {
+                showSubmissionError("Koneksi internet Anda terputus! Periksa koneksi internet lalu tekan tombol coba lagi.");
+                return;
+            }
+
+            if (studentData.scriptUrl) {
+                fetch(studentData.scriptUrl, {
+                    method: 'POST',
+                    mode: 'no-cors',
+                    headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+                    body: JSON.stringify(payload)
+                })
+                .then(() => {
+                    statusBox.className = "mt-6 p-4 bg-emerald-50 rounded-xl text-xs font-semibold text-emerald-700 flex flex-col items-center justify-center space-y-2 border border-emerald-200";
+                    statusIcon.className = "fas fa-check-circle text-base";
+                    statusText.innerText = "Status: Data Jawaban Berhasil Terkirim ke Google Sheets";
+                    btnRetry.classList.add('hidden');
+                })
+                .catch(err => {
+                    showSubmissionError("Gagal terhubung ke Google Sheets. Jaringan terganggu.");
+                });
+            }
+        }
+
+        function showSubmissionError(msg) {
+            const statusBox = document.getElementById('submissionStatus');
+            const statusIcon = document.getElementById('statusIcon');
+            const statusText = document.getElementById('statusText');
+            const btnRetry = document.getElementById('btnRetrySubmit');
+
+            statusBox.className = "mt-6 p-4 bg-rose-50 rounded-xl text-xs font-semibold text-rose-700 flex flex-col items-center justify-center space-y-2 border border-rose-200";
+            statusIcon.className = "fas fa-exclamation-triangle text-base text-rose-600";
+            statusText.innerText = msg;
+            btnRetry.classList.remove('hidden');
+            btnRetry.classList.add('flex');
+        }
+
+        function retrySubmitData() {
+            if (cachedPayload) {
+                sendDataToSpreadsheet(cachedPayload);
+            }
+        }
+
+        function saveCurrentSession() {
+            const sessionData = {
+                studentData,
+                questionsData,
+                currentQuestion,
+                userAnswers,
+                startTime,
+                violationCount
+            };
+            localStorage.setItem('active_quiz_math_session', JSON.stringify(sessionData));
+        }
+
+        function restoreSessionIfExist() {
+            const savedSession = localStorage.getItem('active_quiz_math_session');
+            if (savedSession) {
+                try {
+                    const data = JSON.parse(savedSession);
+                    studentData = data.studentData;
+                    questionsData = data.questionsData || [];
+                    currentQuestion = data.currentQuestion || 0;
+                    userAnswers = data.userAnswers || new Array(TARGET_ITEM_COUNT).fill(null);
+                    startTime = data.startTime || Date.now();
+                    violationCount = data.violationCount || 0;
+
+                    const elapsedSeconds = Math.floor((Date.now() - startTime) / 1000);
+                    const remainingSeconds = TOTAL_DURATION_SECONDS - elapsedSeconds;
+
+                    if (remainingSeconds <= 0) {
+                        executeSubmitQuiz();
+                        return;
+                    }
+
+                    isQuizActive = true;
+                    document.getElementById('identitasSection').classList.add('hidden');
+                    document.getElementById('rulesSection').classList.add('hidden');
+                    document.getElementById('quizSection').classList.remove('hidden');
+                    document.getElementById('headerTimer').classList.remove('hidden');
+                    document.getElementById('headerTimer').classList.add('flex');
+                    document.getElementById('btnTeacherNav').classList.add('hidden');
+
+                    renderQuestionGrid();
+                    loadQuestion(currentQuestion);
+                    startTimer();
+                    checkCheatStatus();
+                } catch(e) {
+                    localStorage.removeItem('active_quiz_math_session');
+                }
+            }
+        }
+
+        function openTeacherLoginModal() {
+            document.getElementById('teacherUsernameInput').value = '';
+            document.getElementById('teacherPasswordInput').value = '';
+            document.getElementById('teacherLoginErrorMsg').classList.add('hidden');
+            document.getElementById('teacherLoginModal').classList.remove('hidden');
+        }
+
+        function closeTeacherLoginModal() {
+            document.getElementById('teacherLoginModal').classList.add('hidden');
+        }
+
+        function processTeacherLogin() {
+            const u = document.getElementById('teacherUsernameInput').value.trim();
+            const p = document.getElementById('teacherPasswordInput').value.trim();
+
+            if (u === TEACHER_USER && p === TEACHER_PASS) {
+                closeTeacherLoginModal();
+                showTeacherDashboard();
+            } else {
+                document.getElementById('teacherLoginErrorMsg').classList.remove('hidden');
+            }
+        }
+
+        function showTeacherDashboard() {
+            document.getElementById('identitasSection').classList.add('hidden');
+            document.getElementById('rulesSection').classList.add('hidden');
+            document.getElementById('quizSection').classList.add('hidden');
+            document.getElementById('resultSection').classList.add('hidden');
+            document.getElementById('teacherDashboardSection').classList.remove('hidden');
+            document.getElementById('btnTeacherNav').classList.add('hidden');
+            fetchTeacherData();
+        }
+
+        function closeTeacherDashboard() {
+            document.getElementById('teacherDashboardSection').classList.add('hidden');
+            document.getElementById('identitasSection').classList.remove('hidden');
+            document.getElementById('btnTeacherNav').classList.remove('hidden');
+        }
+
+        async function fetchTeacherData() {
+            const scriptUrl = document.getElementById('scriptUrl').value.trim();
+            const loader = document.getElementById('teacherTableLoader');
+            const emptyState = document.getElementById('teacherTableEmpty');
+            const tbody = document.getElementById('teacherTableBody');
+            const refreshIcon = document.getElementById('refreshIcon');
+
+            tbody.innerHTML = '';
+            loader.classList.remove('hidden');
+            emptyState.classList.add('hidden');
+            refreshIcon.classList.add('fa-spin');
+
+            try {
+                const response = await fetch(`${scriptUrl}?action=getScores&_nocache=${Date.now()}`);
+                const result = await response.json();
+
+                let dataArr = [];
+                if (result && result.data && Array.isArray(result.data)) {
+                    dataArr = result.data;
+                } else if (Array.isArray(result)) {
+                    dataArr = result;
+                }
+
+                dataArr.sort((a, b) => {
+                    const kelasA = String(a.kelas || "").trim();
+                    const kelasB = String(b.kelas || "").trim();
+                    if (kelasA !== kelasB) {
+                        return kelasA.localeCompare(kelasB, undefined, {numeric: true});
+                    }
+                    return parseInt(a.absen || 0) - parseInt(b.absen || 0);
+                });
+
+                renderTeacherTableData(dataArr);
+
+            } catch (error) {
+                console.error("Gagal mengambil data guru:", error);
+                renderTeacherTableData([]);
+            } finally {
+                loader.classList.add('hidden');
+                refreshIcon.classList.remove('fa-spin');
+            }
+        }
+
+        function renderTeacherTableData(data) {
+            const tbody = document.getElementById('teacherTableBody');
+            const emptyState = document.getElementById('teacherTableEmpty');
+            tbody.innerHTML = '';
+
+            document.getElementById('totalSiswaBadge').innerText = `${data.length} Siswa`;
+
+            if (data.length === 0) {
+                emptyState.classList.remove('hidden');
+                return;
+            }
+
+            emptyState.classList.add('hidden');
+
+            data.forEach((siswa) => {
+                const tr = document.createElement('tr');
+                tr.className = "hover:bg-slate-50 transition border-b border-slate-100";
+
+                const kelas = siswa.kelas || '-';
+                const absen = siswa.absen || '-';
+                const nama = siswa.nama || '-';
+                const skor = siswa.skor || '-';
+                const nilai = siswa.persentase !== undefined ? siswa.persentase : '-';
+                const pelanggaran = siswa.pelanggaran || '0 kali';
+
+                let badgeColor = 'bg-emerald-100 text-emerald-800 border-emerald-300';
+                if (nilai < 60) badgeColor = 'bg-rose-100 text-rose-800 border-rose-300';
+                else if (nilai < 75) badgeColor = 'bg-amber-100 text-amber-800 border-amber-300';
+
+                tr.innerHTML = `
+                    <td class="p-3 font-bold text-indigo-900">${kelas}</td>
+                    <td class="p-3 text-center font-semibold text-slate-600">${absen}</td>
+                    <td class="p-3 font-medium text-slate-800">${nama}</td>
+                    <td class="p-3 text-center text-slate-600">${skor}</td>
+                    <td class="p-3 text-center">
+                        <span class="px-2.5 py-1 rounded-full text-xs font-extrabold border ${badgeColor}">${nilai}</span>
+                    </td>
+                    <td class="p-3 text-center font-bold text-rose-600">${pelanggaran}</td>
+                    <td class="p-3 text-center space-x-1">
+                        <button type="button" onclick="deleteTeacherRecord('${kelas}', '${absen}', '${nama}')" class="px-2 py-1 bg-rose-50 hover:bg-rose-100 text-rose-700 border border-rose-200 rounded font-bold text-[10px] transition inline-flex items-center space-x-1">
+                            <i class="fas fa-trash-alt"></i><span>Hapus</span>
+                        </button>
+                    </td>
+                `;
+                tbody.appendChild(tr);
+            });
+        }
+
+        async function deleteTeacherRecord(kelas, absen, nama) {
+            const scriptUrl = document.getElementById('scriptUrl').value.trim();
+            try {
+                await fetch(scriptUrl, {
+                    method: 'POST',
+                    mode: 'no-cors',
+                    headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+                    body: JSON.stringify({
+                        action: 'deleteScore',
+                        kelas: kelas,
+                        absen: absen
+                    })
+                });
+
+                localStorage.removeItem(`completed_quiz_math_${kelas}_${absen}`);
+                fetchTeacherData();
+            } catch (err) {
+                console.error("Gagal menghapus data:", err);
+            }
+        }
+
+        function openTokenModal() {
+            document.getElementById('inputTokenGuru').value = '';
+            document.getElementById('tokenErrorMsg').classList.add('hidden');
+            document.getElementById('tokenModal').classList.remove('hidden');
+        }
+
+        function closeTokenModal() {
+            document.getElementById('tokenModal').classList.add('hidden');
+        }
+
+        function verifyTeacherToken() {
+            const tokenInput = document.getElementById('inputTokenGuru').value.trim();
+            const kelas = document.getElementById('kelasSiswa').value;
+            const absen = document.getElementById('absenSiswa').value;
+
+            if (tokenInput === SECRET_TEACHER_TOKEN) {
+                localStorage.removeItem(`completed_quiz_math_${kelas}_${absen}`);
+                localStorage.removeItem('active_quiz_math_session');
+                localStorage.removeItem('quiz_cheat_locked');
+                localStorage.removeItem('quiz_violation_count');
+                
+                closeTokenModal();
+                document.getElementById('blockedAlert').classList.add('hidden');
+                
+                const btnNext = document.getElementById('btnNextRules');
+                btnNext.disabled = false;
+                btnNext.classList.remove('opacity-50', 'cursor-not-allowed');
+            } else {
+                document.getElementById('tokenErrorMsg').classList.remove('hidden');
+            }
+        }
+
+        window.addEventListener('DOMContentLoaded', () => {
+            initAbsenDropdown();
+            restoreSessionIfExist();
+        });
+    </script>
+</body>
+</html>
